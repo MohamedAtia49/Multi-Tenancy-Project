@@ -4,7 +4,6 @@
 
     <div class="container">
 
-
         <div class="card">
             <div class="card-header">
                 <h1 class="text-center text-bg-dark">Create Tenant</h1>
@@ -21,6 +20,5 @@
             </div>
         </div><!-- card -->
     </div>
-
 
 @endsection

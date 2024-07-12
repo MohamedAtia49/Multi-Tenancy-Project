@@ -1,40 +1,33 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Console\Commands\Tenants;
 
 use App\Models\Tenant;
-use App\Services\TenantService;
-use Illuminate\Http\Request;
+use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Artisan;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
-class TenantController extends Controller
+class LastCommand extends Command
 {
-    public function index (){
-        dd(DB::getDefaultConnection());
-    }
+    /**
+     * The name and signature of the console command.
+     *
+     * @var string
+     */
+    protected $signature = 'tenant:create';
 
-    public function store(Request $request){
-        $tenant = Tenant::create([
-            'name' => $request->name,
-            'domain' => $request->domain,
-            'database' => $request->name,
-        ]);
+    /**
+     * The console command description.
+     *
+     * @var string
+     */
+    protected $description = 'Tenant creation';
 
-        $client = Auth::user();
-
-        // Option1
-        // Artisan::queue('database:create');
-        //TenantService::SwitchToTenant($tenant);
-
-        // Artisan::queue('tenant:create');
-
-        return $this->createNewTenant($tenant,$client);
-
-    }
-    private function createNewTenant(Tenant $tenant,$client)
+    /**
+     * Execute the console command.
+     */
+    public function handle(Tenant $tenant, $client)
     {
         try {
             $dbUser = config('create_tenant.DB_USERNAME');
@@ -52,8 +45,8 @@ class TenantController extends Controller
             DB::statement("GRANT ALL PRIVILEGES ON " . $tenant->database . ".* TO '" . $dbUser . "'@'%' IDENTIFIED BY '" . $dbPassword . "'");
 
             // MIGRATION
-            // Artisan::call('tenants:artisan "migrate --path=database/migrations/landlord" --tenant=' . $tenant->id);
-            Artisan::call('migrate --path=database/migrations/tenants/ --database=tenant');
+            Artisan::call('tenants:artisan "migrate --path=database/migrations/company" --tenant=' . $tenant->id);
+
             // Artisan::call('tenants:artisan "migrate --seed" --tenant=' . $tenant->id);
 
             // CREATE ADMIN
@@ -63,5 +56,4 @@ class TenantController extends Controller
             Log::error("TenantController - activate: " . $e->getMessage());
         }
     }
-
 }
