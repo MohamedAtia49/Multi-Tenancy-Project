@@ -52,8 +52,9 @@ class TenantController extends Controller
             DB::statement("GRANT ALL PRIVILEGES ON " . $tenant->database . ".* TO '" . $dbUser . "'@'%' IDENTIFIED BY '" . $dbPassword . "'");
 
             // MIGRATION
+            // Artisan::queue('tenant:migrate');
             // Artisan::call('tenants:artisan "migrate --path=database/migrations/landlord" --tenant=' . $tenant->id);
-            Artisan::call('migrate --path=database/migrations/tenants/ --database=tenant');
+            Artisan::call('migrate --force --path=database/migrations/tenants/ --database=tenant');
             // Artisan::call('tenants:artisan "migrate --seed" --tenant=' . $tenant->id);
 
             // CREATE ADMIN

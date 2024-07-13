@@ -28,7 +28,7 @@ class SystemMigrateCommand extends Command
     {
         $this->info('Stating Migration');
         $this->info('If Migration did not start Plz enter (YES)');
-        Artisan::call('migrate --path=database/migrations/landlord/ --database=landlord');
+        Artisan::call('migrate --force --path=database/migrations/landlord/ --database=landlord');
         $this->info(Artisan::output());
     }
 }

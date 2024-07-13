@@ -34,7 +34,7 @@ class MigrateTenant extends Command
             $this->info('IF Database Migration not worked for this domain :' .$tenant->domain . 'Plz Enter (Yes)');
             $this->info('-------------------------------------------------');
             $this->info('If it worked so its Great');
-            Artisan::call('migrate --path=database/migrations/tenants/ --database=tenant');
+            Artisan::call('migrate --force --path=database/migrations/tenants/ --database=tenant');
             $this->info(Artisan::output());
         });
     }
